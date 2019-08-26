@@ -2,7 +2,7 @@ class Players:
 
     def __init__(self, color):
         self.color = color
-        piecesAlive = instantiateAll()
+        self.piecesAlive = self.instantiateAll()
 
     def instantiateAll(self):
         # Va a instanciar el numero apropiado de piezas

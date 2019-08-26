@@ -54,6 +54,7 @@ class Rook(Pieces):
     def __init__(self, color):
         self.color = color
         self.moveSet = [(-1,0), (0,1), (1,0), (0,-1)]
+        self.timesMoved = 0
 
 
 class Queen(Pieces):
@@ -68,3 +69,4 @@ class King(Pieces):
     def __init__(self, color):
         self.color = color
         self.moveSet = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
+        self.timesMoved = 0

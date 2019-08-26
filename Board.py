@@ -10,12 +10,12 @@ class Board:
 
     def createBoard(self):
         newBoard = []
-        newBoard.append(["R", "K", "B", "Q", "ⓚ", "B", "K", "R"])
+        newBoard.append(["R", "K", "B", "Q", "₭", "B", "K", "R"])
         newBoard.append(["P"] * 8)
         for _ in range(4):
             newBoard.append(["#"] * 8)
         newBoard.append(["P"] * 8)
-        newBoard.append(["R", "K", "B", "Q", "ⓚ", "B", "K", "R"])
+        newBoard.append(["R", "K", "B", "Q", "₭", "B", "K", "R"])
         return newBoard
 
     def printBoard(self):
