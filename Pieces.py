@@ -3,9 +3,6 @@ from Constants import ChessConstants
 
 class Pieces:
 
-    pos = ""
-    color = ""
-
     def getPos(self):
         x_value = int(ChessConstants.X.index(self.pos[1]))
         y_value = int(ChessConstants.Y.index(self.pos[0]))
@@ -17,10 +14,11 @@ class Pieces:
 
 class Pawn(Pieces):
 
-    def __init__(self, color):
+    def __init__(self, color, pos):
         self.color = color
-        self.moveSet = [(0, 1), (0, 2)]
+        self.moveSet = [(0, 1), (0, 2)] # arreglar moveset #
         self.timesMoved = 0
+        self.pos = pos
 
     def calculateMoves(self, board):
         x, y = self.getPos()
@@ -37,36 +35,39 @@ class Pawn(Pieces):
 
 class Bishop(Pieces):
 
-    def __init__(self, color):
+    def __init__(self, color, pos):
         self.color = color
         self.moveSet = [(-1,-1), (-1,1), (1,1), (1,-1)]
-
+        self.pos = pos
 
 class Knight(Pieces):
 
-    def __init__(self, color):
+    def __init__(self, color, pos):
         self.color = color
         self.moveSet = [(-2,-1), (-2,1), (-1, 2), (1, 2), (2,1), (2,-1), (1,-2), (-1,-2)]
+        self.pos = pos
 
 
 class Rook(Pieces):
 
-    def __init__(self, color):
+    def __init__(self, color, pos):
         self.color = color
         self.moveSet = [(-1,0), (0,1), (1,0), (0,-1)]
         self.timesMoved = 0
-
+        self.pos = pos
 
 class Queen(Pieces):
 
-    def __init__(self, color):
+    def __init__(self, color, pos):
         self.color = color
         self.moveSet = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
+        self.pos = pos
 
 
 class King(Pieces):
 
-    def __init__(self, color):
+    def __init__(self, color, pos):
         self.color = color
         self.moveSet = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
         self.timesMoved = 0
+        self.pos = pos

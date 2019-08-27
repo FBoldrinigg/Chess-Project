@@ -33,6 +33,7 @@ newBoard = Board()
 newBoard.printBoard()
 newPawn = Pawn(ChessConstants.color[0])
 print(newPawn.color)
-newPawn.pos = "c5"
+newPawn.pos = "a2"
 print(newPawn.pos)
 print(newPawn.calculateMoves(newBoard.board))
+
