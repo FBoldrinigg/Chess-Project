@@ -43,7 +43,7 @@ class Player:
         return piecesList
 
     def movePiece(self):
-        # va a listar las piezas vivas, permitir seleccionar una, pedir la lista
-        # de movimientos disponibles de la pieza seleccionada y solicitar al tablero
-        # que se actualicen  las posiciones despues de confirmar un movimiento.
+        # va a listar las piezas vivas, permitir seleccionar una, ingresar un movimiento,
+        # comparar el movimiento ingresado con la lista de movimientos posibles, y si es
+        # valido pasarle los valores al tablero
         pass

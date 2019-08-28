@@ -33,9 +33,20 @@ class Pawn(Pieces):
             self.moveSet.pop()
         for j in self.moveSet:
             if 0 <= x - j[1] <= 7:
-                if board[x - j[1]][y] == "#":
+                if board.board[x - j[1]][y] == "#":
                     possibleMoves.append(self.returnPos(x - j[1], y))
-        # Agregar check de piezas del color opuesto en (-1,1) y (1,1)
+                else:
+                    break
+        if self.color == ChessConstants.COLOR[0]:
+            if self.returnPos(x - 1, y - 1) in board.blackPieces:
+                possibleMoves.append(self.returnPos(x - 1, y - 1))
+            if self.returnPos(x - 1, y + 1) in board.blackPieces:
+                possibleMoves.append(self.returnPos(x - 1, y + 1))
+        if self.color == ChessConstants.COLOR[1]:
+            if self.returnPos(x + 1, y - 1) in board.whitePieces:
+                possibleMoves.append(self.returnPos(x + 1, y - 1))
+            if self.returnPos(x + 1, y + 1) in board.whitePieces:
+                possibleMoves.append(self.returnPos(x + 1, y + 1))
         return possibleMoves
 
 
@@ -77,3 +88,4 @@ class King(Pieces):
         self.moveSet = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
         self.timesMoved = 0
         self.pos = pos
+

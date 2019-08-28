@@ -10,12 +10,12 @@ class Board:
 
     def createBoard(self):
         newBoard = []
-        newBoard.append(["R", "K", "B", "Q", "₭", "B", "K", "R"])
-        newBoard.append(["P"] * 8)
+        newBoard.append(["r", "n", "b", "q", "k", "b", "n", "r"])
+        newBoard.append(["p"] * 8)
         for _ in range(4):
             newBoard.append(["#"] * 8)
         newBoard.append(["P"] * 8)
-        newBoard.append(["R", "K", "B", "Q", "₭", "B", "K", "R"])
+        newBoard.append(["R", "N", "B", "Q", "K", "B", "N", "R"])
         return newBoard
 
     def printBoard(self):
@@ -40,5 +40,12 @@ blackPlayer = Player(ChessConstants.COLOR[1])
 newBoard = Board(whitePlayer.piecesAlive, blackPlayer.piecesAlive)
 newBoard.printBoard()
 print("White: ", newBoard.whitePieces, "\nBlack: ", newBoard.blackPieces)
-print("black pawn (c7): ", blackPlayer.piecesAlive[2].calculateMoves(newBoard.board))
-print("White pawn (a2): ", whitePlayer.piecesAlive[0].calculateMoves(newBoard.board))
+print("black pawn (c7): ", blackPlayer.piecesAlive[2].calculateMoves(newBoard))
+print("White pawn (e2): ", whitePlayer.piecesAlive[4].calculateMoves(newBoard))
+newBoard.blackPieces.append("d4")
+newBoard.blackPieces.append("f3")
+newBoard.blackPieces.append("d6")
+print("White pawn (e2): ", whitePlayer.piecesAlive[4].calculateMoves(newBoard))
+newBoard.whitePieces.append("b6")
+newBoard.whitePieces.append("d5")
+print("black pawn (c7): ", blackPlayer.piecesAlive[2].calculateMoves(newBoard))
