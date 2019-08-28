@@ -2,31 +2,43 @@ from Constants import ChessConstants
 from Pieces import Pawn, Knight, Rook, Bishop, Queen, King
 
 
-class Players:
+class Player:
 
     def __init__(self, color):
         self.color = color
         self.piecesAlive = self.instantiateAll()
 
     def instantiateAll(self):
-        # Va a instanciar el numero apropiado de piezas
-        # (8 peones, 2 caballeros, 1 rey, etc) y devolverlos
-        # en una lista.
         piecesList = []
-        if self.color == ChessConstants.color[0]:
+        if self.color == ChessConstants.COLOR[0]:
             for x in range(8):
-                newPawn = Pawn(self.color, ChessConstants.white_pawn_pos[x])
+                newPawn = Pawn(self.color, ChessConstants.WHITE_PAWN_POS[x])
                 piecesList.append(newPawn)
             for x in range(2):
-                newKnight = Knight(self.color, ChessConstants.white_knight_pos[x])
+                newKnight = Knight(self.color, ChessConstants.WHITE_KNIGHT_POS[x])
                 piecesList.append(newKnight)
-                newBishop = Bishop(self.color, ChessConstants.white_bishop_pos[x])
+                newBishop = Bishop(self.color, ChessConstants.WHITE_BISHOP_POS[x])
                 piecesList.append((newBishop))
-                newRook = Rook(self.color, ChessConstants.white_rook_pos[x])
+                newRook = Rook(self.color, ChessConstants.WHITE_ROOK_POS[x])
                 piecesList.append(newRook)
-            newQueen = Queen(self.color, ChessConstants.white_queen_pos)
+            newQueen = Queen(self.color, ChessConstants.WHITE_QUEEN_POS)
             piecesList.append(newQueen)
-            newKing = King(self.color, ChessConstants.white_king_pos)
+            newKing = King(self.color, ChessConstants.WHITE_KING_POS)
+            piecesList.append(newKing)
+        elif self.color == ChessConstants.COLOR[1]:
+            for x in range(8):
+                newPawn = Pawn(self.color, ChessConstants.BLACK_PAWN_POS[x])
+                piecesList.append(newPawn)
+            for x in range(2):
+                newKnight = Knight(self.color, ChessConstants.BLACK_KNIGHT_POS[x])
+                piecesList.append(newKnight)
+                newBishop = Bishop(self.color, ChessConstants.BLACK_BISHOP_POS[x])
+                piecesList.append(newBishop)
+                newRook = Rook(self.color, ChessConstants.BLACK_ROOK_POS[x])
+                piecesList.append(newRook)
+            newQueen = Queen(self.color, ChessConstants.BLACK_QUEEN_POS)
+            piecesList.append(newQueen)
+            newKing = King(self.color, ChessConstants.BLACK_KING_POS)
             piecesList.append(newKing)
         return piecesList
 

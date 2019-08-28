@@ -1,12 +1,12 @@
 from Constants import ChessConstants
-from Pieces import Pawn
+from Players import Player
 
 
 class Board:
 
-    def __init__(self):
+    def __init__(self, whitePlayer, blackPlayer):
         self.board = self.createBoard()
-        self.turn = 1
+        self.whitePieces, self.blackPieces = self.getSquares(whitePlayer, blackPlayer)
 
     def createBoard(self):
         newBoard = []
@@ -25,15 +25,20 @@ class Board:
             print(ChessConstants.X[x], self.board[x], ChessConstants.X[x])
         print("\n ", ChessConstants.Y, "\n")
 
+    def getSquares(self, whitePlayer, blackPlayer):
+        whitePieces = []
+        blackPieces = []
+        for piece in whitePlayer:
+            whitePieces.append(piece.pos)
+        for piece in blackPlayer:
+            blackPieces.append(piece.pos)
+        return whitePieces, blackPieces
 
 
-
-
-newBoard = Board()
+whitePlayer = Player(ChessConstants.COLOR[0])
+blackPlayer = Player(ChessConstants.COLOR[1])
+newBoard = Board(whitePlayer.piecesAlive, blackPlayer.piecesAlive)
 newBoard.printBoard()
-newPawn = Pawn(ChessConstants.color[0])
-print(newPawn.color)
-newPawn.pos = "a2"
-print(newPawn.pos)
-print(newPawn.calculateMoves(newBoard.board))
-
+print("White: ", newBoard.whitePieces, "\nBlack: ", newBoard.blackPieces)
+print("black pawn (c7): ", blackPlayer.piecesAlive[2].calculateMoves(newBoard.board))
+print("White pawn (a2): ", whitePlayer.piecesAlive[0].calculateMoves(newBoard.board))

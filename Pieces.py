@@ -3,6 +3,9 @@ from Constants import ChessConstants
 
 class Pieces:
 
+    pos = ""
+    color = ""
+
     def getPos(self):
         x_value = int(ChessConstants.X.index(self.pos[1]))
         y_value = int(ChessConstants.Y.index(self.pos[0]))
@@ -16,7 +19,10 @@ class Pawn(Pieces):
 
     def __init__(self, color, pos):
         self.color = color
-        self.moveSet = [(0, 1), (0, 2)] # arreglar moveset #
+        if self.color == ChessConstants.COLOR[0]:
+            self.moveSet = [(0, 1), (0, 2)]
+        else:
+            self.moveSet = [(0, -1), (0, -2)]
         self.timesMoved = 0
         self.pos = pos
 
