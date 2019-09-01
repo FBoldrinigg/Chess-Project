@@ -29,7 +29,7 @@ class Board:
         whitePieces = []
         blackPieces = []
         for piece in whitePlayer:
-            whitePieces.append(piece.pos)
+            whitePieces.append(piece.pos+"." + str(piece.__class__.__name__))
         for piece in blackPlayer:
             blackPieces.append(piece.pos)
         return whitePieces, blackPieces
@@ -37,15 +37,7 @@ class Board:
 
 whitePlayer = Player(ChessConstants.COLOR[0])
 blackPlayer = Player(ChessConstants.COLOR[1])
+print("test2")
 newBoard = Board(whitePlayer.piecesAlive, blackPlayer.piecesAlive)
-newBoard.printBoard()
-print("White: ", newBoard.whitePieces, "\nBlack: ", newBoard.blackPieces)
-print("black pawn (c7): ", blackPlayer.piecesAlive[2].calculateMoves(newBoard))
-print("White pawn (e2): ", whitePlayer.piecesAlive[4].calculateMoves(newBoard))
-newBoard.blackPieces.append("d4")
-newBoard.blackPieces.append("f3")
-newBoard.blackPieces.append("d6")
-print("White pawn (e2): ", whitePlayer.piecesAlive[4].calculateMoves(newBoard))
-newBoard.whitePieces.append("b6")
-newBoard.whitePieces.append("d5")
-print("black pawn (c7): ", blackPlayer.piecesAlive[2].calculateMoves(newBoard))
+print(newBoard.whitePieces)
+whitePlayer.movePiece(newBoard.whitePieces)

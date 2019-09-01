@@ -3,6 +3,7 @@ class ChessConstants:
     X = "87654321"
     Y = ["a", "b", "c", "d", "e", "f", "g", "h"]
     COLOR = ["white", "black"]
+    PIECES_NAMES = ["Pawn", "Knight", "Bishop", "Rook", "Queen", "King"]
     WHITE_PAWN_POS = ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"]
     WHITE_KNIGHT_POS = ["b1", "g1"]
     WHITE_BISHOP_POS = ["c1", "f1"]

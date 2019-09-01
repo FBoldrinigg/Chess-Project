@@ -1,7 +1,7 @@
 from Constants import ChessConstants
 
 
-class Pieces:
+class Piece:
 
     pos = ""
     color = ""
@@ -15,7 +15,7 @@ class Pieces:
         return ChessConstants.Y[y] + ChessConstants.X[x]
 
 
-class Pawn(Pieces):
+class Pawn(Piece):
 
     def __init__(self, color, pos):
         self.color = color
@@ -50,14 +50,14 @@ class Pawn(Pieces):
         return possibleMoves
 
 
-class Bishop(Pieces):
+class Bishop(Piece):
 
     def __init__(self, color, pos):
         self.color = color
         self.moveSet = [(-1,-1), (-1,1), (1,1), (1,-1)]
         self.pos = pos
 
-class Knight(Pieces):
+class Knight(Piece):
 
     def __init__(self, color, pos):
         self.color = color
@@ -65,7 +65,7 @@ class Knight(Pieces):
         self.pos = pos
 
 
-class Rook(Pieces):
+class Rook(Piece):
 
     def __init__(self, color, pos):
         self.color = color
@@ -73,7 +73,7 @@ class Rook(Pieces):
         self.timesMoved = 0
         self.pos = pos
 
-class Queen(Pieces):
+class Queen(Piece):
 
     def __init__(self, color, pos):
         self.color = color
@@ -81,11 +81,10 @@ class Queen(Pieces):
         self.pos = pos
 
 
-class King(Pieces):
+class King(Piece):
 
     def __init__(self, color, pos):
         self.color = color
         self.moveSet = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
         self.timesMoved = 0
         self.pos = pos
-
