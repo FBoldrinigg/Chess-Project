@@ -33,11 +33,3 @@ class Board:
         for piece in blackPlayer:
             blackPieces.append(piece.pos)
         return whitePieces, blackPieces
-
-
-whitePlayer = Player(ChessConstants.COLOR[0])
-blackPlayer = Player(ChessConstants.COLOR[1])
-print("test2")
-newBoard = Board(whitePlayer.piecesAlive, blackPlayer.piecesAlive)
-print(newBoard.whitePieces)
-whitePlayer.movePiece(newBoard.whitePieces)

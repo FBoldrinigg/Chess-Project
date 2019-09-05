@@ -88,3 +88,4 @@ class King(Piece):
         self.moveSet = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
         self.timesMoved = 0
         self.pos = pos
+
