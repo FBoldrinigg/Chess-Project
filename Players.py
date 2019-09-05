@@ -74,7 +74,7 @@ class Player:
         pieceIndex = False
         while not selectPos:
             try:
-                selectPos = input(":")
+                selectPos = input(":").lower()
                 if selectPos + "." + unitType not in piecesCoord:
                     raise ValueError
             except ValueError:
@@ -125,29 +125,26 @@ class Player:
             print(self.getPiecesAndPosition(unitTypes[0]))
             selectPiece = self.selectApiece(ownCoords, unitTypes[0])
             newPos = self.getNewPosition(board, selectPiece)
-            selectPiece.pos = newPos
         if select == 2:
             print(self.getPiecesAndPosition(unitTypes[1]))
             selectPiece = self.selectApiece(ownCoords, unitTypes[1])
             newPos = self.getNewPosition(board, selectPiece)
-            selectPiece.pos = newPos
         if select == 3:
             print(self.getPiecesAndPosition(unitTypes[2]))
             selectPiece = self.selectApiece(ownCoords, unitTypes[2])
             newPos = self.getNewPosition(board, selectPiece)
-            selectPiece.pos = newPos
         if select == 4:
             print(self.getPiecesAndPosition(unitTypes[3]))
             selectPiece = self.selectApiece(ownCoords, unitTypes[3])
             newPos = self.getNewPosition(board, selectPiece)
-            selectPiece.pos = newPos
         if select == 5:
             print(self.getPiecesAndPosition(unitTypes[4]))
             selectPiece = self.selectApiece(ownCoords, unitTypes[4])
             newPos = self.getNewPosition(board, selectPiece)
-            selectPiece.pos = newPos
         if select == 6:
             print(self.getPiecesAndPosition(unitTypes[5]))
             selectPiece = self.selectApiece(ownCoords, unitTypes[5])
             newPos = self.getNewPosition(board, selectPiece)
-            selectPiece.pos = newPos
+        selectPiece.pos = newPos
+        selectPiece.timesMoved += 1
+        return newPos

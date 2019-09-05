@@ -2,4 +2,5 @@ from Engine import Engine
 
 
 game = Engine()
-game.assignTurn()
+while not game.isGameOver:
+    game.assignTurn()

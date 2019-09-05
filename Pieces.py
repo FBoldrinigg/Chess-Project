@@ -4,7 +4,7 @@ from Constants import ChessConstants
 class Piece:
 
     pos = ""
-    color = ""
+    timesMoved = 0
 
     def getPos(self):
         x_value = int(ChessConstants.X.index(self.pos[1]))
@@ -23,13 +23,12 @@ class Pawn(Piece):
             self.moveSet = [(0, 1), (0, 2)]
         else:
             self.moveSet = [(0, -1), (0, -2)]
-        self.timesMoved = 0
         self.pos = pos
 
     def calculateMoves(self, board):
         x, y = self.getPos()
         possibleMoves = []
-        if self.timesMoved > 0:
+        if self.timesMoved > 0 and len(self.moveSet) > 1:
             self.moveSet.pop()
         for j in self.moveSet:
             if 0 <= x - j[1] <= 7:
@@ -38,15 +37,17 @@ class Pawn(Piece):
                 else:
                     break
         if self.color == ChessConstants.COLOR[0]:
-            if self.returnPos(x - 1, y - 1) in board.blackPieces:
-                possibleMoves.append(self.returnPos(x - 1, y - 1))
-            if self.returnPos(x - 1, y + 1) in board.blackPieces:
-                possibleMoves.append(self.returnPos(x - 1, y + 1))
+            for pos in board.blackPieces:
+                if self.returnPos(x - 1, y - 1) in pos.split("."):
+                    possibleMoves.append(self.returnPos(x - 1, y - 1))
+                if self.returnPos(x - 1, y + 1) in pos.split("."):
+                    possibleMoves.append(self.returnPos(x - 1, y + 1))
         if self.color == ChessConstants.COLOR[1]:
-            if self.returnPos(x + 1, y - 1) in board.whitePieces:
-                possibleMoves.append(self.returnPos(x + 1, y - 1))
-            if self.returnPos(x + 1, y + 1) in board.whitePieces:
-                possibleMoves.append(self.returnPos(x + 1, y + 1))
+            for pos in board.whitePieces:
+                if self.returnPos(x + 1, y - 1) in pos.split("."):
+                    possibleMoves.append(self.returnPos(x + 1, y - 1))
+                if self.returnPos(x + 1, y + 1) in pos.split("."):
+                    possibleMoves.append(self.returnPos(x + 1, y + 1))
         return possibleMoves
 
 
@@ -70,7 +71,6 @@ class Rook(Piece):
     def __init__(self, color, pos):
         self.color = color
         self.moveSet = [(-1,0), (0,1), (1,0), (0,-1)]
-        self.timesMoved = 0
         self.pos = pos
 
 class Queen(Piece):
@@ -86,6 +86,4 @@ class King(Piece):
     def __init__(self, color, pos):
         self.color = color
         self.moveSet = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
-        self.timesMoved = 0
         self.pos = pos
-
