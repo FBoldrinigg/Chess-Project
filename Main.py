@@ -7,5 +7,6 @@ test = int(input(": "))
 if test == 1:
     while not game.isGameOver:
         game.assignTurn()
+    print("\t\t ## GAME OVER ##")
 elif test == 2:
     game.debugMode()

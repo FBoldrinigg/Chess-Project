@@ -4,6 +4,7 @@ class ChessConstants:
     Y = ["a", "b", "c", "d", "e", "f", "g", "h"]
     COLOR = ["white", "black"]
     PIECES_NAMES = ["Pawn", "Knight", "Bishop", "Rook", "Queen", "King"]
+    PIECES_NAMES_DIC = {"Pa": "P", "Kn": "N", "Bi": "B", "Ro": "R", "Qu": "Q", "Ki": "K"}
     WHITE_PAWN_POS = ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"]
     WHITE_KNIGHT_POS = ["b1", "g1"]
     WHITE_BISHOP_POS = ["c1", "f1"]

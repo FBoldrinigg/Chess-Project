@@ -10,13 +10,13 @@ class Board:
     def updateBoard(self):
         newBoard = [["#"] * 8 for _ in range(8)]
         for piece in self.whitePieces:
-            y_value = int(ChessConstants.Y.index(piece[0]))
-            x_value = int(ChessConstants.X.index(piece[1]))
-            newBoard[x_value][y_value] = piece[3]
+            y = int(ChessConstants.Y.index(piece[0]))
+            x = int(ChessConstants.X.index(piece[1]))
+            newBoard[x][y] = ChessConstants.PIECES_NAMES_DIC[piece[3:5]]
         for piece in self.blackPieces:
-            y_value = int(ChessConstants.Y.index(piece[0]))
-            x_value = int(ChessConstants.X.index(piece[1]))
-            newBoard[x_value][y_value] = piece[3].lower()
+            y = int(ChessConstants.Y.index(piece[0]))
+            x = int(ChessConstants.X.index(piece[1]))
+            newBoard[x][y] =  ChessConstants.PIECES_NAMES_DIC[piece[3:5]].lower()
         return newBoard
 
     def printBoard(self):

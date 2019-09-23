@@ -1,7 +1,7 @@
 from Players import Player
 from Board import Board
 from Constants import ChessConstants
-
+from Pieces import King
 
 class Engine:
 
@@ -30,9 +30,15 @@ class Engine:
         for index, pos in enumerate(oponnentPieces):
             if lastMove in pos.split("."):
                 player.piecesAlive.pop(index)
+        self.checkKings(player.piecesAlive)
 
-    def checkKings(self, currentPlayer):
-        pass
+    def checkKings(self, oppPlayer):
+        isKingAlive = False
+        for piece in oppPlayer:
+            if isinstance(piece, King):
+                isKingAlive = True
+                break
+        self.isGameOver = not isKingAlive
 
     def debugMode(self):
         localTurn = 0
