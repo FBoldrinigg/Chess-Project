@@ -45,18 +45,6 @@ class Player:
     def displayPiecesType(self):
         unitTypes = set()
         for piece in self.piecesAlive:
-            """if type(piece) == Pawn and ChessConstants.PIECES_NAMES[0] not in unitTypes:
-                unitTypes.append(ChessConstants.PIECES_NAMES[0])
-            if type(piece) == Knight and ChessConstants.PIECES_NAMES[1] not in unitTypes:
-                unitTypes.append(ChessConstants.PIECES_NAMES[1])
-            if type(piece) == Bishop and ChessConstants.PIECES_NAMES[2] not in unitTypes:
-                unitTypes.append(ChessConstants.PIECES_NAMES[2])
-            if type(piece) == Rook and ChessConstants.PIECES_NAMES[3] not in unitTypes:
-                unitTypes.append(ChessConstants.PIECES_NAMES[3])
-            if type(piece) == Queen and ChessConstants.PIECES_NAMES[4] not in unitTypes:
-                unitTypes.append(ChessConstants.PIECES_NAMES[4])
-            if type(piece) == King and ChessConstants.PIECES_NAMES[5] not in unitTypes:
-                unitTypes.append(ChessConstants.PIECES_NAMES[5])"""
             if type(piece) == Pawn:
                 unitTypes.add(ChessConstants.PIECES_NAMES[0])
             if type(piece) == Knight:
