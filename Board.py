@@ -1,5 +1,4 @@
 from Constants import ChessConstants
-from Pieces import Piece
 
 
 class Board:

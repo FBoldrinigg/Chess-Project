@@ -43,9 +43,9 @@ class Player:
         return piecesAlive
 
     def displayPiecesType(self):
-        unitTypes = []
+        unitTypes = set()
         for piece in self.piecesAlive:
-            if type(piece) == Pawn and ChessConstants.PIECES_NAMES[0] not in unitTypes:
+            """if type(piece) == Pawn and ChessConstants.PIECES_NAMES[0] not in unitTypes:
                 unitTypes.append(ChessConstants.PIECES_NAMES[0])
             if type(piece) == Knight and ChessConstants.PIECES_NAMES[1] not in unitTypes:
                 unitTypes.append(ChessConstants.PIECES_NAMES[1])
@@ -56,8 +56,20 @@ class Player:
             if type(piece) == Queen and ChessConstants.PIECES_NAMES[4] not in unitTypes:
                 unitTypes.append(ChessConstants.PIECES_NAMES[4])
             if type(piece) == King and ChessConstants.PIECES_NAMES[5] not in unitTypes:
-                unitTypes.append(ChessConstants.PIECES_NAMES[5])
-        return unitTypes
+                unitTypes.append(ChessConstants.PIECES_NAMES[5])"""
+            if type(piece) == Pawn:
+                unitTypes.add(ChessConstants.PIECES_NAMES[0])
+            if type(piece) == Knight:
+                unitTypes.add(ChessConstants.PIECES_NAMES[1])
+            if type(piece) == Bishop:
+                unitTypes.add(ChessConstants.PIECES_NAMES[2])
+            if type(piece) == Rook:
+                unitTypes.add(ChessConstants.PIECES_NAMES[3])
+            if type(piece) == Queen:
+                unitTypes.add(ChessConstants.PIECES_NAMES[4])
+            if type(piece) == King:
+                unitTypes.add(ChessConstants.PIECES_NAMES[5])
+        return list(unitTypes)
 
     def getPiecesAndPosition(self, unitTypes):
         tempUnitStrings = ""
@@ -75,7 +87,9 @@ class Player:
         while not selectPos:
             try:
                 selectPos = input(":").lower()
-                if selectPos + "." + unitType not in piecesCoord:
+                if selectPos == "0":
+                    return 0
+                elif selectPos + "." + unitType not in piecesCoord:
                     raise ValueError
             except ValueError:
                 print("Error. No ", unitType, " in that position")
@@ -91,60 +105,80 @@ class Player:
 
     def getNewPosition(self, board, piece):
         pos = ""
+        print("\n0) to cancel selection.\n")
         while not pos:
             try:
                 pos = input("Where to move: ")
-                if pos not in piece.calculateMoves(board):
+                if pos == "0":
+                    return 0
+                elif pos not in piece.calculateMoves(board):
                     raise ValueError
             except ValueError:
                 print("Wrong input. Invalid move.")
                 pos = ""
         return pos
 
+    def allowReturnMenu(self, selectPiece, select, board):
+        newPos = 0
+        if not selectPiece:
+            select = -1
+        else:
+            newPos = self.getNewPosition(board, selectPiece)
+            if not newPos:
+                select = -1
+        return select, newPos
 
     def movePiece(self, board):
         select = -1
         unitTypes = self.displayPiecesType()
+        selectPiece = False
         if self.color == ChessConstants.COLOR[0]:
             ownCoords = board.whitePieces
         else:
             ownCoords = board.blackPieces
-        print("\n")
-        for index, unit in enumerate(unitTypes):
-            print(str(index + 1) + ")", unit)
-        print("\n0) To return\n")
         while select == -1:
+            print("\n")
+            for index, unit in enumerate(unitTypes):
+                print(str(index + 1) + ")", unit)
             try:
-                select = int(input("Select type to list all it's remaining pieces: "))
+                select = int(input("\nSelect type to list all it's remaining pieces: "))
                 if not 0 <= select <= len(unitTypes):
                     raise ValueError
             except ValueError:
                 print("Wrong input, must enter a valid index.")
                 select = -1
-        if select == 1:
-            print(self.getPiecesAndPosition(unitTypes[0]))
-            selectPiece = self.selectApiece(ownCoords, unitTypes[0])
-            newPos = self.getNewPosition(board, selectPiece)
-        if select == 2:
-            print(self.getPiecesAndPosition(unitTypes[1]))
-            selectPiece = self.selectApiece(ownCoords, unitTypes[1])
-            newPos = self.getNewPosition(board, selectPiece)
-        if select == 3:
-            print(self.getPiecesAndPosition(unitTypes[2]))
-            selectPiece = self.selectApiece(ownCoords, unitTypes[2])
-            newPos = self.getNewPosition(board, selectPiece)
-        if select == 4:
-            print(self.getPiecesAndPosition(unitTypes[3]))
-            selectPiece = self.selectApiece(ownCoords, unitTypes[3])
-            newPos = self.getNewPosition(board, selectPiece)
-        if select == 5:
-            print(self.getPiecesAndPosition(unitTypes[4]))
-            selectPiece = self.selectApiece(ownCoords, unitTypes[4])
-            newPos = self.getNewPosition(board, selectPiece)
-        if select == 6:
-            print(self.getPiecesAndPosition(unitTypes[5]))
-            selectPiece = self.selectApiece(ownCoords, unitTypes[5])
-            newPos = self.getNewPosition(board, selectPiece)
+            if select == 1:
+                print(self.getPiecesAndPosition(unitTypes[0]), "\n\n0) to return\n")
+                selectPiece = self.selectApiece(ownCoords, unitTypes[0])
+                print(selectPiece.calculateMoves(board))
+                select, newPos = self.allowReturnMenu(selectPiece, select, board)
+            if select == 2:
+                print(self.getPiecesAndPosition(unitTypes[1]), "\n\n0) to return\n")
+                selectPiece = self.selectApiece(ownCoords, unitTypes[1])
+                print(selectPiece.calculateMoves(board))
+                select, newPos = self.allowReturnMenu(selectPiece, select, board)
+            if select == 3:
+                print(self.getPiecesAndPosition(unitTypes[2]), "\n\n0) to return\n")
+                selectPiece = self.selectApiece(ownCoords, unitTypes[2])
+                print(selectPiece.calculateMoves(board))
+                select, newPos = self.allowReturnMenu(selectPiece, select, board)
+            if select == 4:
+                print(self.getPiecesAndPosition(unitTypes[3]), "\n\n0) to return\n")
+                selectPiece = self.selectApiece(ownCoords, unitTypes[3])
+                print(selectPiece.calculateMoves(board))
+                select, newPos = self.allowReturnMenu(selectPiece, select, board)
+            if select == 5:
+                print(self.getPiecesAndPosition(unitTypes[4]), "\n\n0) to return\n")
+                selectPiece = self.selectApiece(ownCoords, unitTypes[4])
+                print(selectPiece.calculateMoves(board))
+                select, newPos = self.allowReturnMenu(selectPiece, select, board)
+            if select == 6:
+                print(self.getPiecesAndPosition(unitTypes[5]), "\n\n0) to return\n")
+                selectPiece = self.selectApiece(ownCoords, unitTypes[5])
+                print(selectPiece.calculateMoves(board))
+                select, newPos = self.allowReturnMenu(selectPiece, select, board)
+            if select == 0:
+                return 0
         selectPiece.pos = newPos
         selectPiece.timesMoved += 1
         return newPos

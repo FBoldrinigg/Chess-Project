@@ -51,13 +51,6 @@ class Pawn(Piece):
         return possibleMoves
 
 
-class Bishop(Piece):
-
-    def __init__(self, color, pos):
-        self.color = color
-        self.moveSet = [(-1,-1), (-1,1), (1,1), (1,-1)]
-        self.pos = pos
-
 class Knight(Piece):
 
     def __init__(self, color, pos):
@@ -65,6 +58,51 @@ class Knight(Piece):
         self.moveSet = [(-2,-1), (-2,1), (-1, 2), (1, 2), (2,1), (2,-1), (1,-2), (-1,-2)]
         self.pos = pos
 
+    def calculateMoves(self, board):
+        x, y = self.getPos()
+        possibleMoves = []
+        ownPieces = ""
+        if self.color == ChessConstants.COLOR[0]:
+            for piece in board.whitePieces:
+                ownPieces += piece.split(".")[0]
+        else:
+            for piece in board.blackPieces:
+                ownPieces += piece.split(".")[0]
+        for j in self.moveSet:
+            if 0 <= y + j[0] <= 7 and 0 <= x + j[1] <= 7:
+                if self.returnPos(x + j[1], y + j[0]) not in ownPieces:
+                    possibleMoves.append(self.returnPos(x + j[1], y + j[0]))
+        return possibleMoves
+
+
+class Bishop(Piece):
+
+    def __init__(self, color, pos):
+        self.color = color
+        self.moveSet = [(-1,-1), (-1,1), (1,1), (1,-1)]
+        self.pos = pos
+
+    def calculateMoves(self, board):
+        x, y = self.getPos()
+        possibleMoves = []
+        ownPieces = ""
+        if self.color == ChessConstants.COLOR[0]:
+            for piece in board.whitePieces:
+                ownPieces += piece.split(".")[0]
+        else:
+            for piece in board.blackPieces:
+                ownPieces += piece.split(".")[0]
+        for j in self.moveSet:
+            for i in range(1, 8):
+                if 0 <= y + j[0] * i <= 7 and 0 <= x + j[1] * i <= 7:
+                    if board.board[x + j[1] * i][y + j[0] * i] == '#':
+                        possibleMoves.append(self.returnPos(x + j[1] * i, y + j[0] * i))
+                    elif self.returnPos(x + j[1] * i, y + j[0] * i) not in ownPieces:
+                        possibleMoves.append(self.returnPos(x + j[1] * i, y + j[0] * i))
+                        break
+                    else:
+                        break
+        return possibleMoves
 
 class Rook(Piece):
 
@@ -73,6 +111,29 @@ class Rook(Piece):
         self.moveSet = [(-1,0), (0,1), (1,0), (0,-1)]
         self.pos = pos
 
+    def calculateMoves(self, board):
+        x, y = self.getPos()
+        possibleMoves = []
+        ownPieces = ""
+        if self.color == ChessConstants.COLOR[0]:
+            for piece in board.whitePieces:
+                ownPieces += piece.split(".")[0]
+        else:
+            for piece in board.blackPieces:
+                ownPieces += piece.split(".")[0]
+        for j in self.moveSet:
+            for i in range(1, 8):
+                if 0 <= y + j[0] * i <= 7 and 0 <= x + j[1] * i <= 7:
+                    if board.board[x + j[1] * i][y + j[0] * i] == '#':
+                        possibleMoves.append(self.returnPos(x + j[1] * i, y + j[0] * i))
+                    elif self.returnPos(x + j[1] * i, y + j[0] * i) not in ownPieces:
+                        possibleMoves.append(self.returnPos(x + j[1] * i, y + j[0] * i))
+                        break
+                    else:
+                        break
+        return possibleMoves
+
+
 class Queen(Piece):
 
     def __init__(self, color, pos):
@@ -80,6 +141,27 @@ class Queen(Piece):
         self.moveSet = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
         self.pos = pos
 
+    def calculateMoves(self, board):
+        x, y = self.getPos()
+        possibleMoves = []
+        ownPieces = ""
+        if self.color == ChessConstants.COLOR[0]:
+            for piece in board.whitePieces:
+                ownPieces += piece.split(".")[0]
+        else:
+            for piece in board.blackPieces:
+                ownPieces += piece.split(".")[0]
+        for j in self.moveSet:
+            for i in range(1, 8):
+                if 0 <= y + j[0] * i <= 7 and 0 <= x + j[1] * i <= 7:
+                    if board.board[x + j[1] * i][y + j[0] * i] == '#':
+                        possibleMoves.append(self.returnPos(x + j[1] * i, y + j[0] * i))
+                    elif self.returnPos(x + j[1] * i, y + j[0] * i) not in ownPieces:
+                        possibleMoves.append(self.returnPos(x + j[1] * i, y + j[0] * i))
+                        break
+                    else:
+                        break
+        return possibleMoves
 
 class King(Piece):
 
@@ -87,3 +169,19 @@ class King(Piece):
         self.color = color
         self.moveSet = [(-1,0), (-1,1), (0,1), (1,1), (1,0), (1,-1), (0,-1), (-1,-1)]
         self.pos = pos
+
+    def calculateMoves(self, board):
+        x, y = self.getPos()
+        possibleMoves = []
+        ownPieces = ""
+        if self.color == ChessConstants.COLOR[0]:
+            for piece in board.whitePieces:
+                ownPieces += piece.split(".")[0]
+        else:
+            for piece in board.blackPieces:
+                ownPieces += piece.split(".")[0]
+        for j in self.moveSet:
+            if 0 <= x + j[1] <= 7 and 0 <= y + j[0] <= 7:
+                if self.returnPos(x + j[1], y + j[0]) not in ownPieces:
+                    possibleMoves.append(self.returnPos(x + j[1], y + j[0]))
+        return possibleMoves
