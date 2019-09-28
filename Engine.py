@@ -17,32 +17,33 @@ class Engine:
         self.newBoard.printBoard()
         if self.turn % 2 == 0:
             print(" ## BLACK PLAYER'S TURN ##")
-            lastMove = self.movePiece(self.newBoard, self.blackPlayer)
-            self.capturePiece(lastMove, self.newBoard.whitePieces, self.whitePlayer)
+            newPos, selectedPiece, oldPos = self.movePiece(self.blackPlayer)
+            capturedPiece = self.capturePiece(newPos, self.newBoard.whitePieces, self.whitePlayer)
+            if self.isKingInCheck(self.blackPlayer.piecesAlive, self.whitePlayer.piecesAlive) and newPos:
+                if capturedPiece:
+                    self.whitePlayer.piecesAlive.append(capturedPiece)
+                selectedPiece.pos = oldPos
+                selectedPiece.timesMoved -= 1
+                newPos = ""
         else:
             print(" ## WHITE PLAYER'S TURN ##")
-            lastMove = self.movePiece(self.newBoard, self.whitePlayer)
-            self.capturePiece(lastMove, self.newBoard.blackPieces, self.blackPlayer)
-        if lastMove:
-            self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(self.whitePlayer.piecesAlive, self.blackPlayer.piecesAlive)
-            self.newBoard.board = self.newBoard.updateBoard()
+            newPos, selectedPiece, oldPos = self.movePiece(self.whitePlayer)
+            capturedPiece = self.capturePiece(newPos, self.newBoard.blackPieces, self.blackPlayer)
+            if self.isKingInCheck(self.whitePlayer.piecesAlive, self.blackPlayer.piecesAlive) and newPos:
+                if capturedPiece:
+                    self.blackPlayer.piecesAlive.append(capturedPiece)
+                selectedPiece.pos = oldPos
+                selectedPiece.timesMoved -= 1
+                newPos = ""
+        self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(self.whitePlayer.piecesAlive, self.blackPlayer.piecesAlive)
+        self.newBoard.board = self.newBoard.updateBoard()
+        if newPos:
             self.turn += 1
-
 
     def capturePiece(self, lastMove, oponnentPieces, player):
         for index, pos in enumerate(oponnentPieces):
             if lastMove in pos.split("."):
-                player.piecesAlive.pop(index)
-        self.checkKings(player)
-
-    def checkKings(self, oppPlayer):
-        isKingAlive = False
-        for piece in oppPlayer.piecesAlive:
-            if isinstance(piece, King):
-                isKingAlive = True
-                break
-        self.isGameOver = not isKingAlive
-        self.loser = oppPlayer.color
+                return player.piecesAlive.pop(index)
 
     def debugMode(self):
         localTurn = 0
@@ -167,7 +168,7 @@ class Engine:
                 print(selectPos, unitType, "selected.")
         return pieces[pieceIndex]
 
-    def selectNewPos(self, selectPiece, select, board):
+    def selectNewPos(self, selectPiece, select):
         newPos = ""
         if not selectPiece:
             select = -1
@@ -178,7 +179,7 @@ class Engine:
                     newPos = input("Where to move: ")
                     if newPos == "0":
                         return 0, False
-                    elif newPos not in self.calculateMoves(selectPiece, board):
+                    elif newPos not in self.calculateMoves(selectPiece):
                         raise ValueError
                 except ValueError:
                     print("Wrong input. Invalid move.")
@@ -187,15 +188,15 @@ class Engine:
                 select = -1
         return select, newPos
 
-    def movePiece(self, board, player):
+    def movePiece(self, player):
         select = -1
         unitTypes = self.displayPiecesType(player)
         selectedPiece = False
         newPos = ""
         if player.color == ChessConstants.COLOR[0]:
-            ownCoords = board.whitePieces
+            ownCoords = self.newBoard.whitePieces
         else:
-            ownCoords = board.blackPieces
+            ownCoords = self.newBoard.blackPieces
         while select == -1:
             print("\n")
             for index, unit in enumerate(unitTypes):
@@ -210,38 +211,39 @@ class Engine:
             if select == 1:
                 print(self.getPiecesAndPosition(unitTypes[0], player.piecesAlive), "\n\n0) to return\n")
                 selectedPiece = self.selectApiece(ownCoords, unitTypes[0], player.piecesAlive)
-                print(self.calculateMoves(selectedPiece, board) if selectedPiece else "")
-                select, newPos = self.selectNewPos(selectedPiece, select, board)
+                print(self.calculateMoves(selectedPiece) if selectedPiece else "")
+                select, newPos = self.selectNewPos(selectedPiece, select)
             if select == 2:
                 print(self.getPiecesAndPosition(unitTypes[1], player.piecesAlive), "\n\n0) to return\n")
                 selectedPiece = self.selectApiece(ownCoords, unitTypes[1], player.piecesAlive)
-                print(self.calculateMoves(selectedPiece, board) if selectedPiece else "")
-                select, newPos = self.selectNewPos(selectedPiece, select, board)
+                print(self.calculateMoves(selectedPiece) if selectedPiece else "")
+                select, newPos = self.selectNewPos(selectedPiece, select)
             if select == 3:
                 print(self.getPiecesAndPosition(unitTypes[2], player.piecesAlive), "\n\n0) to return\n")
                 selectedPiece = self.selectApiece(ownCoords, unitTypes[2], player.piecesAlive)
-                print(self.calculateMoves(selectedPiece, board) if selectedPiece else "")
-                select, newPos = self.selectNewPos(selectedPiece, select, board)
+                print(self.calculateMoves(selectedPiece) if selectedPiece else "")
+                select, newPos = self.selectNewPos(selectedPiece, select)
             if select == 4:
                 print(self.getPiecesAndPosition(unitTypes[3], player.piecesAlive), "\n\n0) to return\n")
                 selectedPiece = self.selectApiece(ownCoords, unitTypes[3], player.piecesAlive)
-                print(self.calculateMoves(selectedPiece, board) if selectedPiece else "")
-                select, newPos = self.selectNewPos(selectedPiece, select, board)
+                print(self.calculateMoves(selectedPiece) if selectedPiece else "")
+                select, newPos = self.selectNewPos(selectedPiece, select)
             if select == 5:
                 print(self.getPiecesAndPosition(unitTypes[4], player.piecesAlive), "\n\n0) to return\n")
                 selectedPiece = self.selectApiece(ownCoords, unitTypes[4], player.piecesAlive)
-                print(self.calculateMoves(selectedPiece, board) if selectedPiece else "")
-                select, newPos = self.selectNewPos(selectedPiece, select, board)
+                print(self.calculateMoves(selectedPiece) if selectedPiece else "")
+                select, newPos = self.selectNewPos(selectedPiece, select)
             if select == 6:
                 print(self.getPiecesAndPosition(unitTypes[5], player.piecesAlive), "\n\n0) to return\n")
                 selectedPiece = self.selectApiece(ownCoords, unitTypes[5], player.piecesAlive)
-                print(self.calculateMoves(selectedPiece, board) if selectedPiece else "")
-                select, newPos = self.selectNewPos(selectedPiece, select, board)
+                print(self.calculateMoves(selectedPiece) if selectedPiece else "")
+                select, newPos = self.selectNewPos(selectedPiece, select)
             if select == 0:
-                return 0
+                return 0, 0, 0
+        oldPos = selectedPiece.pos
         selectedPiece.pos = newPos
         selectedPiece.timesMoved += 1
-        return newPos
+        return newPos, selectedPiece, oldPos
 
     def getPos(self, piece):
         x_value = int(ChessConstants.X.index(piece.pos[1]))
@@ -251,37 +253,41 @@ class Engine:
     def returnPos(self, x, y):
         return ChessConstants.Y[y] + ChessConstants.X[x]
 
-    def calculateMoves(self, selPiece, board):
+    def calculateMoves(self, selPiece):
         x, y = self.getPos(selPiece)
         possibleMoves = []
         ownPieces = ""
         if selPiece.color == ChessConstants.COLOR[0]:
-            for piece in board.whitePieces:
+            for piece in self.newBoard.whitePieces:
                 ownPieces += piece.split(".")[0]
         else:
-            for piece in board.blackPieces:
+            for piece in self.newBoard.blackPieces:
                 ownPieces += piece.split(".")[0]
         if isinstance(selPiece, Pawn):
             if selPiece.timesMoved > 0 and len(selPiece.moveSet) > 1:
                 selPiece.moveSet.pop()
             for j in selPiece.moveSet:
                 if 0 <= x - j[1] <= 7:
-                    if board.board[x - j[1]][y] == "#":
+                    if self.newBoard.board[x - j[1]][y] == "#":
                         possibleMoves.append(self.returnPos(x - j[1], y))
                     else:
                         break
             if selPiece.color == ChessConstants.COLOR[0]:
-                for pos in board.blackPieces:
-                    if self.returnPos(x - 1, y - 1) in pos.split("."):
-                        possibleMoves.append(self.returnPos(x - 1, y - 1))
-                    if self.returnPos(x - 1, y + 1) in pos.split("."):
-                        possibleMoves.append(self.returnPos(x - 1, y + 1))
+                for pos in self.newBoard.blackPieces:
+                    if 0 <= x - 1 <= 7 and 0 <= y - 1 <= 7:
+                        if self.returnPos(x - 1, y - 1) in pos.split("."):
+                            possibleMoves.append(self.returnPos(x - 1, y - 1))
+                    if 0 <= x - 1 <= 7 and 0 <= y + 1 <= 7:
+                        if self.returnPos(x - 1, y + 1) in pos.split("."):
+                            possibleMoves.append(self.returnPos(x - 1, y + 1))
             else:
-                for pos in board.whitePieces:
-                    if self.returnPos(x + 1, y - 1) in pos.split("."):
-                        possibleMoves.append(self.returnPos(x + 1, y - 1))
-                    if self.returnPos(x + 1, y + 1) in pos.split("."):
-                        possibleMoves.append(self.returnPos(x + 1, y + 1))
+                for pos in self.newBoard.whitePieces:
+                    if 0 <= x + 1 <= 7 and 0 <= y - 1 <= 7:
+                        if self.returnPos(x + 1, y - 1) in pos.split("."):
+                            possibleMoves.append(self.returnPos(x + 1, y - 1))
+                    if 0 <= x + 1 <= 7 and 0 <= y + 1 <= 7:
+                        if self.returnPos(x + 1, y + 1) in pos.split("."):
+                            possibleMoves.append(self.returnPos(x + 1, y + 1))
         elif isinstance(selPiece, Knight):
             for j in selPiece.moveSet:
                 if 0 <= y + j[0] <= 7 and 0 <= x + j[1] <= 7:
@@ -291,7 +297,7 @@ class Engine:
             for j in selPiece.moveSet:
                 for i in range(1, 8):
                     if 0 <= y + j[0] * i <= 7 and 0 <= x + j[1] * i <= 7:
-                        if board.board[x + j[1] * i][y + j[0] * i] == '#':
+                        if self.newBoard.board[x + j[1] * i][y + j[0] * i] == '#':
                             possibleMoves.append(self.returnPos(x + j[1] * i, y + j[0] * i))
                         elif self.returnPos(x + j[1] * i, y + j[0] * i) not in ownPieces:
                             possibleMoves.append(self.returnPos(x + j[1] * i, y + j[0] * i))
@@ -304,3 +310,18 @@ class Engine:
                     if self.returnPos(x + j[1], y + j[0]) not in ownPieces:
                         possibleMoves.append(self.returnPos(x + j[1], y + j[0]))
         return possibleMoves
+
+    def isKingInCheck(self, pieces, oppPieces):
+        self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(self.whitePlayer.piecesAlive,
+                                                                                        self.blackPlayer.piecesAlive)
+        self.newBoard.board = self.newBoard.updateBoard()
+        ownKingPos = False
+        for piece in pieces:
+            if isinstance(piece, King):
+                ownKingPos = piece.pos
+        for piece in oppPieces:
+            if ownKingPos in self.calculateMoves(piece):
+                print("####### INVALID MOVE. OWN KING IS IN CHECK #######")
+                return True
+        return False
+
