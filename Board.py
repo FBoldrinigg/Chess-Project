@@ -21,10 +21,10 @@ class Board:
 
     def printBoard(self):
         print("\n")
-        print(" ", ChessConstants.Y, "\n")
+        print("   \t\t\t\t\t\t\t  ", ChessConstants.Y, "\n")
         for x in range(8):
-            print(ChessConstants.X[x], self.board[x], ChessConstants.X[x])
-        print("\n ", ChessConstants.Y, "\n")
+            print("\t\t\t\t\t\t\t", ChessConstants.X[x], self.board[x], ChessConstants.X[x])
+        print("\n   \t\t\t\t\t\t\t  ", ChessConstants.Y, "\n")
 
     def getSquares(self, whitePlayer, blackPlayer):
         whitePieces = []

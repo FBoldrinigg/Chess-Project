@@ -11,13 +11,16 @@ class Engine:
         self.blackPlayer = Player(ChessConstants.COLOR[1])
         self.newBoard = Board(self.whitePlayer.piecesAlive, self.blackPlayer.piecesAlive)
         self.isGameOver = False
+        self.loser = ""
 
     def assignTurn(self):
         self.newBoard.printBoard()
         if self.turn % 2 == 0:
+            print(" ## BLACK PLAYER'S TURN ##")
             lastMove = self.blackPlayer.movePiece(self.newBoard)
             self.capturePiece(lastMove, self.newBoard.whitePieces, self.whitePlayer)
         else:
+            print(" ## WHITE PLAYER'S TURN ##")
             lastMove = self.whitePlayer.movePiece(self.newBoard)
             self.capturePiece(lastMove, self.newBoard.blackPieces, self.blackPlayer)
         if lastMove:
@@ -30,15 +33,16 @@ class Engine:
         for index, pos in enumerate(oponnentPieces):
             if lastMove in pos.split("."):
                 player.piecesAlive.pop(index)
-        self.checkKings(player.piecesAlive)
+        self.checkKings(player)
 
     def checkKings(self, oppPlayer):
         isKingAlive = False
-        for piece in oppPlayer:
+        for piece in oppPlayer.piecesAlive:
             if isinstance(piece, King):
                 isKingAlive = True
                 break
         self.isGameOver = not isKingAlive
+        self.loser = oppPlayer.color
 
     def debugMode(self):
         localTurn = 0
@@ -46,15 +50,15 @@ class Engine:
         while not exitDebug:
             selector = False
             self.newBoard.printBoard()
-            print("\t\t ## DEBUG MODE ##")
+            print(" ## DEBUG MODE ##")
             if localTurn == 0:
-                print("\t## WHITE PLAYER'S TURN ##")
+                print(" ## WHITE PLAYER'S TURN ##")
                 lastMove = self.whitePlayer.movePiece(self.newBoard)
                 self.capturePiece(lastMove, self.newBoard.blackPieces, self.blackPlayer)
                 if lastMove == 0:
                     localTurn = 1
             elif localTurn == 1:
-                print("\t## BLACK PLAYER'S TURN ##")
+                print(" ## BLACK PLAYER'S TURN ##")
                 lastMove = self.blackPlayer.movePiece(self.newBoard)
                 self.capturePiece(lastMove, self.newBoard.whitePieces, self.whitePlayer)
                 if lastMove == 0:
@@ -74,3 +78,13 @@ class Engine:
                         selector = False
             self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(self.whitePlayer.piecesAlive, self.blackPlayer.piecesAlive)
             self.newBoard.board = self.newBoard.updateBoard()
+
+    def winningScreen(self):
+        print("## GAME OVER ##")
+        if self.loser == ChessConstants.COLOR[0]:
+            print("\nBLACK PLAYER WINS")
+        else:
+            print("\nWHITE PLAYER WINS")
+        print("## Turns played:", self.turn - 1)
+
+
