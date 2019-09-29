@@ -29,6 +29,7 @@ class Engine:
             newPos, selectedPiece, oldPos = self.movePiece(currentPlayer)
             capturedPiece = self.capturePiece(newPos, opponentPlayer)
             if self.isKingInCheck(currentPlayer.getKing().pos, opponentPlayer.piecesAlive) and newPos:
+                print("\n\n### INVALID MOVE. OWN KING WILL BE / IS IN CHECK ###\n\n")
                 if capturedPiece:
                         opponentPlayer.piecesAlive.append(capturedPiece)
                 selectedPiece.pos = oldPos
@@ -39,26 +40,31 @@ class Engine:
             if newPos:
                 self.check(currentPlayer, opponentPlayer)
                 self.checkPromotion(selectedPiece, currentPlayer)
+                if opponentPlayer.inCheck:
+                    self.checkMate(currentPlayer, opponentPlayer)
                 self.turn += 1
         if select == 2:
             rooks = self.checkCastle(currentPlayer)
             oldRookPos, selectedRook, oldKingPos = self.castle(rooks, currentPlayer)
             if self.isKingInCheck(currentPlayer.getKing().pos, opponentPlayer.piecesAlive):
+                print("\n\n### INVALID MOVE. OWN KING WILL BE / IS IN CHECK ###\n\n")
                 selectedRook.pos = oldRookPos
                 currentPlayer.getKing().pos = oldKingPos
                 self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(self.whitePlayer.piecesAlive, self.blackPlayer.piecesAlive)
                 self.newBoard.board = self.newBoard.updateBoard()
             else:
                 self.check(currentPlayer, opponentPlayer)
+                if opponentPlayer.inCheck:
+                    self.checkMate(currentPlayer, opponentPlayer)
                 selectedRook.timesMoved += 1
                 currentPlayer.getKing().timesMoved += 1
                 currentPlayer.hasCastled = True
                 self.turn += 1
 
-    def capturePiece(self, lastMove, player):
-        for index, piece in enumerate(player.piecesAlive):
+    def capturePiece(self, lastMove, oppPlayer):
+        for index, piece in enumerate(oppPlayer.piecesAlive):
             if lastMove == piece.pos:
-                return player.piecesAlive.pop(index)
+                return oppPlayer.piecesAlive.pop(index)
 
     def debugMode(self):
         exitDebug = False
@@ -120,12 +126,16 @@ class Engine:
             self.newBoard.board = self.newBoard.updateBoard()
 
     def winningScreen(self):
-        print("## GAME OVER ##")
+        print("\n", ["#"] * 30)
+        print("\n### CHECKMATE ###\n### GAME OVER ###")
         if self.loser == ChessConstants.COLOR[0]:
             print("\nBLACK PLAYER WINS")
         else:
             print("\nWHITE PLAYER WINS")
-        print("## Turns played:", self.turn - 1)
+        print("### Turns played:", self.turn - 1)
+        print("\n ### Last board state:")
+        self.newBoard.printBoard()
+        print("\n", ["#"] * 30)
 
     def instantiateAll(self, color):
         piecesAlive = []
@@ -356,7 +366,6 @@ class Engine:
         self.newBoard.board = self.newBoard.updateBoard()
         for piece in oppPieces:
             if ownKingPos in self.calculateMoves(piece):
-                print("\n\n### INVALID MOVE. OWN KING WILL BE / IS IN CHECK ###\n\n")
                 return True
         return False
 
@@ -444,8 +453,31 @@ class Engine:
             currentPlayer.getKing().pos = ChessConstants.CASTLE_DIC[selectedRookPos][-2]
         return selectedRookPos, selectedRook, oldKingPos
 
-    def checkMate(self):
-        pass
+    def checkMate(self, currentPlayer, opponentPlayer):
+        validMoves = []
+        for piece in opponentPlayer.piecesAlive:
+            originalPosition = piece.pos
+            availableMoves = self.calculateMoves(piece)
+            if availableMoves:
+                for move in availableMoves:
+                    piece.pos = move
+                    piece.timesMoved += 1
+                    capturedPiece = self.capturePiece(move, currentPlayer)
+                    if self.isKingInCheck(opponentPlayer.getKing().pos, currentPlayer.piecesAlive):
+                        if capturedPiece:
+                            currentPlayer.piecesAlive.append(capturedPiece)
+                        piece.pos = originalPosition
+                        piece.timesMoved -= 1
+                    else:
+                        validMoves.append(piece.__class__.__name__ + "." + originalPosition + " to " + move)
+                        if capturedPiece:
+                            currentPlayer.piecesAlive.append(capturedPiece)
+                        piece.pos = originalPosition
+                        piece.timesMoved -= 1
+                        break
+        if not validMoves:
+            self.isGameOver = True
+            self.loser = opponentPlayer.color
 
     def turnMenu(self, currentPlayer):
         menu = ["Move piece"]
