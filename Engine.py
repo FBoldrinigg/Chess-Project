@@ -41,7 +41,7 @@ class Engine:
                 self.checkPromotion(selectedPiece, currentPlayer)
                 self.turn += 1
         if select == 2:
-            rooks = self.checkCastle(currentPlayer.getRooks())
+            rooks = self.checkCastle(currentPlayer)
             oldRookPos, selectedRook, oldKingPos = self.castle(rooks, currentPlayer)
             if self.isKingInCheck(currentPlayer.getKing().pos, opponentPlayer.piecesAlive):
                 selectedRook.pos = oldRookPos
@@ -50,8 +50,10 @@ class Engine:
                 self.newBoard.board = self.newBoard.updateBoard()
             else:
                 self.check(currentPlayer, opponentPlayer)
+                selectedRook.timesMoved += 1
+                currentPlayer.getKing().timesMoved += 1
+                currentPlayer.hasCastled = True
                 self.turn += 1
-
 
     def capturePiece(self, lastMove, player):
         for index, piece in enumerate(player.piecesAlive):
@@ -402,13 +404,8 @@ class Engine:
         currentPlayer.remove(selectedPiece)
         currentPlayer.append(newPiece)
 
-    def checkCastle(self, rooks):
-        if not rooks:
-            return False
-        if rooks[0].color == ChessConstants.COLOR[0]:
-            currentPlayer = self.whitePlayer
-        else:
-            currentPlayer = self.blackPlayer
+    def checkCastle(self, currentPlayer):
+        rooks = currentPlayer.getRooks()
         validRooks = currentPlayer.getRooks()
         for rook in rooks:
             if rook.timesMoved == 0 and currentPlayer.getKing().timesMoved == 0:
@@ -453,8 +450,9 @@ class Engine:
     def turnMenu(self, currentPlayer):
         menu = ["Move piece"]
         select = False
-        if self.checkCastle(currentPlayer.getRooks()):
-            menu.append("Castle")
+        if not currentPlayer.hasCastled:
+            if self.checkCastle(currentPlayer):
+                menu.append("Castle")
         for index, option in enumerate(menu):
             print(str(index + 1) + ")", option)
         while not select:

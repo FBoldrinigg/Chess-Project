@@ -7,6 +7,7 @@ class Player:
         self.color = color
         self.piecesAlive = pieces
         self.inCheck = False
+        self.hasCastled = False
 
     def getKing(self):
         for piece in self.piecesAlive:
