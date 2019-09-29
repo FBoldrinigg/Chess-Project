@@ -59,30 +59,48 @@ class Engine:
                 return player.piecesAlive.pop(index)
 
     def debugMode(self):
-        localTurn = 0
         exitDebug = False
+        self.turn = 1
         while not exitDebug:
             selector = False
             self.newBoard.printBoard()
             print(" ## DEBUG MODE ##")
-            if localTurn % 2 == 1:
+            self.newBoard.printBoard()
+            if self.turn % 2 == 0:
                 currentPlayer = self.blackPlayer
                 opponentPlayer = self.whitePlayer
             else:
                 currentPlayer = self.whitePlayer
                 opponentPlayer = self.blackPlayer
-            print(" ## BLACK PLAYER'S TURN ##" if localTurn % 2 == 1 else " ## WHITE PLAYER'S TURN ##")
+            print(" ## BLACK PLAYER'S TURN ##" if self.turn % 2 == 0 else " ## WHITE PLAYER'S TURN ##")
             print(" ## KING IS IN CHECK ## " if currentPlayer.inCheck else "")
-            newPos, selectedPiece, oldPos = self.movePiece(currentPlayer)
-            capturedPiece = self.capturePiece(newPos, opponentPlayer)
-            if self.isKingInCheck(currentPlayer.getKing().pos, opponentPlayer.piecesAlive) and newPos:
-                if capturedPiece:
-                    opponentPlayer.piecesAlive.append(capturedPiece)
-                selectedPiece.pos = oldPos
-                selectedPiece.timesMoved -= 1
-                newPos = ""
-                if newPos == 0:
-                    localTurn = 0
+            select = self.turnMenu(currentPlayer)
+            if select == 1:
+                newPos, selectedPiece, oldPos = self.movePiece(currentPlayer)
+                capturedPiece = self.capturePiece(newPos, opponentPlayer)
+                if self.isKingInCheck(currentPlayer.getKing().pos, opponentPlayer.piecesAlive) and newPos:
+                    if capturedPiece:
+                        opponentPlayer.piecesAlive.append(capturedPiece)
+                    selectedPiece.pos = oldPos
+                    selectedPiece.timesMoved -= 1
+                    newPos = ""
+                self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(
+                    self.whitePlayer.piecesAlive, self.blackPlayer.piecesAlive)
+                self.newBoard.board = self.newBoard.updateBoard()
+                if newPos:
+                    self.check(currentPlayer, opponentPlayer)
+                    self.checkPromotion(selectedPiece, currentPlayer)
+            if select == 2:
+                rooks = self.checkCastle(currentPlayer.getRooks())
+                oldRookPos, selectedRook, oldKingPos = self.castle(rooks, currentPlayer)
+                if self.isKingInCheck(currentPlayer.getKing().pos, opponentPlayer.piecesAlive):
+                    selectedRook.pos = oldRookPos
+                    currentPlayer.getKing().pos = oldKingPos
+                    self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(
+                        self.whitePlayer.piecesAlive, self.blackPlayer.piecesAlive)
+                    self.newBoard.board = self.newBoard.updateBoard()
+                else:
+                    self.check(currentPlayer, opponentPlayer)
             if newPos == 0:
                 while isinstance(selector, bool):
                     try:
@@ -90,7 +108,7 @@ class Engine:
                         if selector == 0:
                             exitDebug = True
                         elif selector == 1:
-                            localTurn = 1
+                            self.turn += 1
                         else:
                             raise ValueError
                     except ValueError:
@@ -420,13 +438,13 @@ class Engine:
             selectedRookPos = rooks[0].pos
             rooks[0].pos = ChessConstants.CASTLE_DIC[selectedRookPos][-1]
             oldKingPos = currentPlayer.getKing().pos
-            currentPlayer.getKing().pos = ChessConstants.CASTLE_DIC[rooks[0].pos][-2]
+            currentPlayer.getKing().pos = ChessConstants.CASTLE_DIC[selectedRookPos][-2]
         if select == 2:
             selectedRook = rooks[1]
             selectedRookPos = rooks[1].pos
             rooks[1].pos = ChessConstants.CASTLE_DIC[selectedRookPos][-1]
             oldKingPos = currentPlayer.getKing().pos
-            currentPlayer.getKing().pos = ChessConstants.CASTLE_DIC[rooks[1].pos][-2]
+            currentPlayer.getKing().pos = ChessConstants.CASTLE_DIC[selectedRookPos][-2]
         return selectedRookPos, selectedRook, oldKingPos
 
     def checkMate(self):
