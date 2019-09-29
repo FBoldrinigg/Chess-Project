@@ -17,3 +17,4 @@ class ChessConstants:
     BLACK_ROOK_POS = ["a8", "h8"]
     BLACK_QUEEN_POS = "d8"
     BLACK_KING_POS = "e8"
+    CASTLE_DIC = {"a1": ("b1", "c1", "d1"), "h1": ("g1", "f1"), "a8": ("b8", "c8", "d8"), "h8": ("g8", "f8")}
