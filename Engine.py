@@ -410,8 +410,8 @@ class Engine:
         else:
             newPiece = Queen(selectedPiece.color, selectedPiece.pos)
             newPiece.timesMoved = selectedPiece.timesMoved
-        currentPlayer.remove(selectedPiece)
-        currentPlayer.append(newPiece)
+        currentPlayer.piecesAlive.remove(selectedPiece)
+        currentPlayer.piecesAlive.append(newPiece)
 
     def checkCastle(self, currentPlayer):
         rooks = currentPlayer.getRooks()
@@ -424,6 +424,8 @@ class Engine:
                     if not self.newBoard.board[x][y] == "#":
                         validRooks.remove(rook)
                         break
+            else:
+                validRooks.remove(rook)
         return validRooks
 
     def castle(self, rooks, currentPlayer):
