@@ -35,7 +35,10 @@ class Engine:
                 selectedPiece.pos = oldPos
                 selectedPiece.timesMoved -= 1
                 newPos = ""
-            self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(self.whitePlayer.piecesAlive, self.blackPlayer.piecesAlive)
+            self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(
+                self.whitePlayer.piecesAlive,
+                self.blackPlayer.piecesAlive
+            )
             self.newBoard.board = self.newBoard.updateBoard()
             if newPos:
                 self.check(currentPlayer, opponentPlayer)
@@ -477,6 +480,10 @@ class Engine:
                         piece.pos = originalPosition
                         piece.timesMoved -= 1
                         break
+
+        self.newBoard.whitePieces, self.newBoard.blackPieces = self.newBoard.getSquares(self.whitePlayer.piecesAlive,
+                                                                                        self.blackPlayer.piecesAlive)
+        self.newBoard.board = self.newBoard.updateBoard()
         if not validMoves:
             self.isGameOver = True
             self.loser = opponentPlayer.color

@@ -6,6 +6,7 @@ class Piece:
     pos = ""
     timesMoved = 0
     color = ""
+    moveSet = []
 
 
 class Pawn(Piece):
